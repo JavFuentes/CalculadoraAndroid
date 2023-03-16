@@ -6,28 +6,28 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import net.objecthunter.exp4j.Expression;
+import net.objecthunter.exp4j.ExpressionBuilder;
+
+import java.text.DecimalFormat;
+
 public class MainActivity extends AppCompatActivity {
 
-    private String operacionPendiente = "";
+    private String expresion = "";
+    private double resultado = 0f;
 
-    private float primerOperando = 0f;
-    private float resultado = 0f;
-    private int resultadoInt = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Buscar el TextView que muestra el resultado
-        TextView visor_resultado = findViewById(R.id.tv_resultado);
-
         // Asignar un listener a cada botón numérico
         Button boton1 = findViewById(R.id.btn_1);
         boton1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                agregarDigito(1);
+                agregarCaracter("1");
             }
         });
 
@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         boton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                agregarDigito(2);
+                agregarCaracter("2");
             }
         });
 
@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         boton3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                agregarDigito(3);
+                agregarCaracter("3");
             }
         });
 
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         boton4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                agregarDigito(4);
+                agregarCaracter("4");
             }
         });
 
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         btn_5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                agregarDigito(5);
+                agregarCaracter("5");
             }
         });
 
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         boton6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                agregarDigito(6);
+                agregarCaracter("6");
             }
         });
 
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         boton7.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                agregarDigito(7);
+                agregarCaracter("7");
             }
         });
 
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         boton8.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                agregarDigito(8);
+                agregarCaracter("8");
             }
         });
 
@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         boton9.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                agregarDigito(9);
+                agregarCaracter("9");
             }
         });
 
@@ -99,7 +99,57 @@ public class MainActivity extends AppCompatActivity {
         boton0.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                agregarDigito(0);
+                agregarCaracter("0");
+            }
+        });
+
+        Button botonSuma = findViewById(R.id.btn_suma);
+        botonSuma.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                agregarCaracter("+");
+            }
+        });
+
+        Button botonResta = findViewById(R.id.btn_resta);
+        botonResta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                agregarCaracter("-");
+            }
+        });
+
+        Button botonMultiplicacion = findViewById(R.id.btn_multiplicacion);
+        botonMultiplicacion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                agregarCaracter("*");
+            }
+        });
+
+        Button botonDivision = findViewById(R.id.btn_division);
+        botonDivision.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                agregarCaracter("/");
+            }
+        });
+
+        // Asignar un listener al botón de apertura de paréntesis
+        Button botonParentesisApertura = findViewById(R.id.btn_parentesis_apertura);
+        botonParentesisApertura.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                agregarCaracter("(");
+            }
+        });
+
+        // Asignar un listener al botón de cierre de paréntesis
+        Button botonParentesisCierre = findViewById(R.id.btn_parentesis_cierre);
+        botonParentesisCierre.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                agregarCaracter(")");
             }
         });
 
@@ -121,133 +171,45 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Asignar un listener a cada botón de operación
-        Button botonSuma = findViewById(R.id.btn_suma);
-        botonSuma.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                operacionPendiente = "+";
-                primerOperando = Float.parseFloat(visor_resultado.getText().toString());
-                visor_resultado.setText("");
-            }
-        });
-
-        Button botonResta = findViewById(R.id.btn_resta);
-        botonResta.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                operacionPendiente = "-";
-                primerOperando = Float.parseFloat(visor_resultado.getText().toString());
-                visor_resultado.setText("");
-            }
-        });
-
-        Button botonMultiplicacion = findViewById(R.id.btn_multiplicacion);
-        botonMultiplicacion.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                operacionPendiente = "*";
-                primerOperando = Float.parseFloat(visor_resultado.getText().toString());
-                visor_resultado.setText("");
-            }
-        });
-
-        Button botonDivision = findViewById(R.id.btn_division);
-        botonDivision.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                operacionPendiente = "/";
-                primerOperando = Float.parseFloat(visor_resultado.getText().toString());
-                visor_resultado.setText("");
-            }
-        });
-
         // Asignar un listener al botón punto
         Button botonPunto = findViewById(R.id.btn_punto);
         botonPunto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                agregarPunto();
+                agregarCaracter(".");
             }
         });
     }
 
-    // Método para agregar un dígito al número en pantalla
-    public void agregarDigito(int digito) {
+    // Método para agregar un caracter al número en pantalla
+    public void agregarCaracter(String caracter) {
 
         // Buscar el TextView que muestra el resultado
         TextView visor_resultado = findViewById(R.id.tv_resultado);
 
         // Obtener el número actual
-        String numeroActual = visor_resultado.getText().toString();
-        numeroActual = eliminarCerosIzquierda(numeroActual);
+        String expresionActual = visor_resultado.getText().toString();
+        expresionActual = eliminarCerosIzquierda(expresionActual);
 
         // Agregar el nuevo dígito
-        String nuevoNumero = numeroActual + digito;
+        String nuevaExpresion = expresionActual + caracter;
 
         // Mostrar el nuevo número en pantalla
-        visor_resultado.setText(nuevoNumero);
+        visor_resultado.setText(nuevaExpresion);
     }
 
-    public void agregarPunto() {
 
-        // Buscar el TextView que muestra el resultado
-        TextView visor_resultado = findViewById(R.id.tv_resultado);
-
-        // Obtener el número actual
-        String numeroActual = visor_resultado.getText().toString();
-
-        // Agregar el nuevo dígito
-        String nuevoNumero = numeroActual + ".";
-
-        // Mostrar el nuevo número en pantalla
-        visor_resultado.setText(nuevoNumero);
-    }
-
-    // Método para calcular el resultado final
-    private void realizarOperacion() {
-
-        // Buscar el TextView que muestra el resultado
-        TextView visor_resultado = findViewById(R.id.tv_resultado);
-
-        // Realizar la operación pendiente (si existe)
-        if (operacionPendiente.equals("+")) {
-            resultado = primerOperando + Float.parseFloat(visor_resultado.getText().toString());
-        } else if (operacionPendiente.equals("-")) {
-            resultado = primerOperando - Float.parseFloat(visor_resultado.getText().toString());
-        } else if (operacionPendiente.equals("*")) {
-            resultado = primerOperando * Float.parseFloat(visor_resultado.getText().toString());
-        } else if (operacionPendiente.equals("/")) {
-            resultado = primerOperando / Float.parseFloat(visor_resultado.getText().toString());
-        }
-
-        // Mostrar el resultado final en pantalla
-        if (Math.floor(resultado) == resultado) {
-            resultadoInt = (int) resultado;
-            visor_resultado.setText(String.valueOf(resultadoInt));
-        } else {
-            // El número float tiene una parte decimal distinta de cero, no se puede convertir a int
-            visor_resultado.setText(String.valueOf(resultado));
-
-        }
-        // Se reinician variables
-        operacionPendiente = "";
-        resultado = 0;
-    }
-
-    //  Función que reinicia las operaciones
+    // Función que reinicia las operaciones
     public void borrar() {
 
         // Buscar el TextView que muestra el resultado
         TextView visor_resultado = findViewById(R.id.tv_resultado);
 
-        // Borra el contenido del TextView y reinicia variables
+        // Borra el contenido del TextView
         visor_resultado.setText("0");
-        operacionPendiente = "";
-        primerOperando = 0f;
     }
 
-    //  Función que elimina los ceros a la izquerda de una cadena
+    // Función que elimina los ceros a la izquerda de una cadena
     public static String eliminarCerosIzquierda(String cadena) {
 
         // Verifica si la cadena es nula o está vacía, si es así devuelve la cadena original
@@ -263,5 +225,27 @@ public class MainActivity extends AppCompatActivity {
 
         // Devuelve la subcadena a partir del primer caracter distinto de cero
         return cadena.substring(i);
+    }
+
+    // Método para calcular el resultado final
+    private void realizarOperacion() {
+
+        // Buscar el TextView que muestra el resultado
+        TextView visor_resultado = findViewById(R.id.tv_resultado);
+
+        // Obtener la expresión matemática como una cadena de caracteres desde el TextView
+        expresion = visor_resultado.getText().toString();
+
+        // Calcular el resultado de la expresión utilizando la clase CalcularExpresiones
+        resultado = CalcularExpresiones.evaluarExpresion(expresion);
+
+        // Crear un objeto DecimalFormat para limitar el resultado a un máximo de 8 decimales
+        DecimalFormat df = new DecimalFormat("#.########");
+
+        // Formatear el resultado utilizando el objeto DecimalFormat creado
+        String resultadoFormateado = df.format(resultado);
+
+        // Establecer el resultado formateado en el TextView que muestra el resultado
+        visor_resultado.setText(resultadoFormateado);
     }
 }
